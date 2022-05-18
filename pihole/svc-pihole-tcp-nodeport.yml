@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pihole
+  name: pihole-web
+spec:
+  ports:
+  # - name: dns
+  #   targetPort: dns
+  #   protocol: TCP
+  #   port: 53
+  #   targetPort: dns
+  - name: pihole-http
+    port: 80
+    protocol: TCP
+    targetPort: pihole-http
+  selector:
+    app: pihole
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pihole
+  name: pihole-tcp
+spec:
+  allocateLoadBalancerNodePorts: true
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ports:
+  - name: dns
+    targetPort: dns
+    nodePort: 31053
+    protocol: TCP
+    port: 53
+  selector:
+    app: pihole
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pihole
+  name: pihole-udp
+spec:
+  allocateLoadBalancerNodePorts: true
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ports:
+  - name: dns-udp
+    targetPort: dns-udp
+    nodePort: 31054
+    protocol: UDP
+    port: 53
+  selector:
+    app: pihole
+  sessionAffinity: None
+  type: LoadBalancer

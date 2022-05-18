@@ -1,0 +1,15 @@
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: pihole
+  namespace: pihole
+spec:
+  entryPoints:
+  - dns
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: pihole-tcp
+      namespace: pihole
+      port: 53

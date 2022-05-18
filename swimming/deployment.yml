@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: swimcheck
+  name: swimcheck
+  namespace: swimcheck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swimcheck
+  template:
+    metadata:
+      labels:
+        app: swimcheck
+    spec:
+      containers:
+      - image: alpine:3
+        imagePullPolicy: IfNotPresent
+        name: swimcheck
+        command: ["/run.sh"]
+        volumeMounts:
+        - mountPath: /run.sh
+          name: entrypoint
+          subPath: run.sh
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 0755
+          name: entrypoint
+        name: entrypoint

@@ -1,0 +1,17 @@
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pihole
+  namespace: pihole
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`pihole.hubble.local`)
+    services:
+    - kind: Service
+      name: pihole-web
+      namespace: pihole
+      port: 80
