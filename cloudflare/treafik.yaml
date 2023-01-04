@@ -94,5 +94,7 @@ data:
     # in the connection from cloudflared to your local service, not from the internet to cloudflared.
     - hostname: pihole.farren.uk
       service: http://pihole-web.pihole.svc.cluster.local:80
+    - hostname: jukebox.farren.uk
+      service: http://192.168.0.114:80
     # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
     - service: http_status:404
