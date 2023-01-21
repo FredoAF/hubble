@@ -2,6 +2,7 @@ apiVersion: v1
 data:
   run.sh: |
     #!/bin/sh
+    SLEEP=1800
     URL="https://legacy.coursepro.co.uk/portal/api/HomePortal/booking/search?filter=%7B%22region%22:3,%22courseGroupCategory%22:%5B1%5D,%22centre%22:9,%22courseType%22:1,%22levelGroup1%22:%5B5%5D,%22level5%22:%5B10%5D,%22dayOfWeek%22:%5B6,0%5D,%22showFullCourses%22:false%7D&direct=1"
     echo "Starting"
     apk add jq curl
@@ -11,9 +12,14 @@ data:
       echo $data
       if [ "$data" != "[]" ]; then
         curl -s -d "$data" ntfy.sh/itsafarrenswim
-        exit 0
+        # If data is found, then double the sleep timer each time. Will get exponentially longer between checks
+        SLEEP=$((SLEEP + SLEEP))
+      else
+        # if no data found, reset the sleep counter
+        SLEEP=3600
       fi
-      sleep 3600
+      echo "Sleeping for $SLEEP"
+      sleep $SLEEP
     done
 kind: ConfigMap
 metadata:
