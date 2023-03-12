@@ -95,6 +95,8 @@ data:
     - hostname: pihole.farren.uk
       service: http://pihole-web.pihole.svc.cluster.local:80
     - hostname: jukebox.farren.uk
-      service: http://192.168.0.114:80
+      service: http://192.168.0.110:80
+    - hostname: status.farren.uk
+      service: http://kuma.uptime.svc.cluster.local:3001
     # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
     - service: http_status:404
