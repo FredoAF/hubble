@@ -1,0 +1,152 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: speedtest
+  name: speedtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: speedtest
+  template:
+    metadata:
+      labels:
+        app: speedtest
+    spec:
+      containers:
+      - image: ghcr.io/alexjustesen/speedtest-tracker:latest
+        imagePullPolicy: IfNotPresent
+        name: speedtest
+        ports:
+          - containerPort: 80
+            name: speedtest-http
+            protocol: TCP
+        volumeMounts:
+          - mountPath: /config
+            name: config
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: APP_DEBUG
+            value: "true"
+          - name: DB_CONNECTION
+            value: mysql
+          - name: DB_HOST
+            value: mysql
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_DATABASE
+            value: speedtest_tracker
+          - name: DB_USERNAME
+            value: speedy
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: db-password
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: config
+---
+apiVersion: v1
+kind: Service
+metadata:  
+  name: speedtest
+  namespace: speedtest
+spec:
+  selector:    
+    app: speedtest
+  type: ClusterIP
+  ports:  
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - env:
+        - name: MARIADB_DATABASE
+          value: speedtest_tracker
+        - name: MARIADB_USER
+          value: speedy
+        - name: MARIADB_RANDOM_ROOT_PASSWORD
+          value: "true"
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: db-password
+        image: mariadb:10
+        imagePullPolicy: IfNotPresent
+        name: mysql
+        ports:
+          - containerPort: 3306
+            name: mysql
+            protocol: TCP
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: database
+      volumes:
+        - name: database
+          persistentVolumeClaim:
+            claimName: database
+---
+apiVersion: v1
+kind: Service
+metadata:  
+  name: mysql
+  namespace: speedtest
+spec:
+  selector:    
+    app: mysql
+  type: ClusterIP
+  ports:  
+  - name: http
+    port: 3306
+    targetPort: 3306
+    protocol: TCP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database
+  namespace: speedtest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: config
+  namespace: speedtest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
