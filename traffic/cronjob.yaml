@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: traffic
+  namespace: traffic
+spec:
+  schedule: "0/5 6-9 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: storage
+              persistentVolumeClaim:
+                claimName: pvc
+          containers:
+            - name: taffic
+              image: ghcr.io/fredoaf/traffic-alerts:0.1.0
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DATA_DIR
+                  value: /app/data/state.json
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: API_KEY
+                      name: apikey
+              volumeMounts:
+                - mountPath: /app/data
+                  name: storage
+            # command:
+          restartPolicy: OnFailure
