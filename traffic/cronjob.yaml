@@ -15,11 +15,11 @@ spec:
                 claimName: pvc
           containers:
             - name: taffic
-              image: ghcr.io/fredoaf/traffic-alerts:0.1.0
+              image: ghcr.io/fredoaf/traffic-alerts:0.2.0
               imagePullPolicy: IfNotPresent
               env:
                 - name: DATA_DIR
-                  value: /app/data/state.json
+                  value: /app/data/
                 - name: API_KEY
                   valueFrom:
                     secretKeyRef:
