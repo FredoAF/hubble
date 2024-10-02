@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: traffic
+  name: traffic-offpeak
   namespace: traffic
 spec:
-  schedule: "0/5 6-9 * * *"
+  schedule: "0/15 10-22 * * *"
   jobTemplate:
     spec:
       template:
