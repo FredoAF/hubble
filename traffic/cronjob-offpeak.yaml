@@ -15,7 +15,7 @@ spec:
                 claimName: pvc
           containers:
             - name: taffic
-              image: ghcr.io/fredoaf/traffic-alerts:0.4.0
+              image: ghcr.io/fredoaf/traffic-alerts:0.5.0
               imagePullPolicy: IfNotPresent
               env:
                 - name: DATA_DIR

@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflared
+  namespace: cloudflared
 spec:
   selector:
     matchLabels:
@@ -69,6 +70,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cloudflared
+  namespace: cloudflared
 data:
   config.yaml: |
     # Name of the tunnel you want to run
@@ -100,5 +102,7 @@ data:
       service: http://speedtest.speedtest.svc.cluster.local:80
     - hostname: status.farren.uk
       service: http://kuma.uptime.svc.cluster.local:3001
+    - hostname: traffic.farren.uk
+      service: http://display.traffic.svc.cluster.local:5000
     # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
     - service: http_status:404

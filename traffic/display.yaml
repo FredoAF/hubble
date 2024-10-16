@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: traffic-display
+  name: display
+  namespace: traffic
+spec:
+  selector:
+    matchLabels:
+      component: traffic-display
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        component: traffic-display
+    spec:
+      containers:
+        - name: display
+          imagePullPolicy: Always
+          image: ghcr.io/fredoaf/traffic-display:0.11.0
+          env:
+            - name: DATA_DIR
+              value: /app/data/
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: /app/data
+              name: storage
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 5000
+          #     scheme: HTTP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 5000
+          #     scheme: HTTP
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: pvc-display
+
+---
+apiVersion: v1
+kind: Service
+metadata:  
+  name: display
+  namespace: traffic
+spec:
+  selector:    
+    component: traffic-display
+  type: ClusterIP
+  ports:  
+  - name: http
+    port: 5000
+    targetPort: 5000
+    protocol: TCP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-display
+  namespace: traffic
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
