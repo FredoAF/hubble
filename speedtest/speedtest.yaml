@@ -16,7 +16,7 @@ spec:
         app: speedtest
     spec:
       containers:
-      - image: ghcr.io/alexjustesen/speedtest-tracker:latest
+      - image: linuxserver/speedtest-tracker:1.6.1
         imagePullPolicy: IfNotPresent
         name: speedtest
         ports:
