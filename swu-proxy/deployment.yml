@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: swu-proxy
+  name: swu-proxy
+  namespace: swu-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swu-proxy
+  template:
+    metadata:
+      labels:
+        app: swu-proxy
+    spec:
+      containers:
+      - image: ghcr.io/fredoaf/swu-proxy-print:v0.1.1
+        imagePullPolicy: IfNotPresent
+        name: swu-proxy
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:  
+  name: swu-proxy
+  namespace: swu-proxy
+spec:
+  selector:    
+    app: swu-proxy
+  type: ClusterIP
+  ports:  
+  - name: http
+    port: 80
+    targetPort: 5000
+    protocol: TCP

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: cloudflared
-        image: cloudflare/cloudflared:2025.6.1
+        image: cloudflare/cloudflared:2026.1.1
         args:
         - tunnel
         # Points cloudflared to the config file, which configures what
@@ -102,5 +102,7 @@ data:
       service: http://speedtest.speedtest.svc.cluster.local:80
     - hostname: traffic.farren.uk
       service: http://display.traffic.svc.cluster.local:5000
+    - hostname: swu-proxy.farren.uk
+      service: http://swu-proxy.swu-proxy.svc.cluster.local
     # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
     - service: http_status:404
