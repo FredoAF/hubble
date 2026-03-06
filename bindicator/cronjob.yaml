@@ -1,0 +1,17 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: bindicator
+  namespace: bindicator
+spec:
+  schedule: "0 17 * * 3"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: taffic
+              image: ghcr.io/fredoaf/bindicator:v0.1.1
+              imagePullPolicy: IfNotPresent
+          restartPolicy: Never
