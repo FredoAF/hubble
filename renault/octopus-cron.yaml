@@ -1,0 +1,33 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: octopus-fetch-tariff
+  namespace: renault
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: octopus-fetch-tariff
+              image: ghcr.io/fredoaf/ev-dashboard:v0.0.3
+              imagePullPolicy: Always
+              env:
+                - name: REDIS_HOST
+                  value: redis-service.redis.svc.cluster.local
+                - name: OCTOPUS_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: octopus-api-key
+                      name: config
+                - name: OCTOPUS_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: octopus-account-id
+                      name: config
+              command:
+                - python
+                - /app/update.py
+          restartPolicy: OnFailure

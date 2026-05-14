@@ -1,0 +1,40 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renault-api
+  namespace: renault
+spec:
+  schedule: "0 */3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: renault-api
+              image: ghcr.io/fredoaf/ev-dashboard:v0.0.3
+              imagePullPolicy: Always
+              env:
+                - name: REDIS_HOST
+                  value: redis-service.redis.svc.cluster.local
+                - name: RENAULT_VIN
+                  valueFrom:
+                    secretKeyRef:
+                      key: renault-vin
+                      name: config
+                - name: RENAULT_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: renault-acount-id
+                      name: config
+                - name: RENAULT_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: renault-username
+                      name: config
+                - name: RENAULT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: renault-password
+                      name: config
+          restartPolicy: OnFailure

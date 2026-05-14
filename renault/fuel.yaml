@@ -1,0 +1,33 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: octopus-fetch-fuel
+  namespace: renault
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: octopus-fetch-fuel
+              image: ghcr.io/fredoaf/ev-dashboard:v0.0.3
+              imagePullPolicy: Always
+              env:
+                - name: REDIS_HOST
+                  value: redis-service.redis.svc.cluster.local
+                - name: ONEGOV_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      key: onegov-client-secret
+                      name: config
+                - name: ONEGOV_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: onegov-client-id
+                      name: config
+              command:
+                - python
+                - /app/onegov.py
+          restartPolicy: OnFailure

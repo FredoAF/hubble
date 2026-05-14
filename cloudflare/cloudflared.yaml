@@ -98,11 +98,11 @@ data:
       service: http://pihole-web.pihole.svc.cluster.local:80
     - hostname: jukebox.farren.uk
       service: http://192.168.0.110:80
-    - hostname: speedtest.farren.uk
-      service: http://speedtest.speedtest.svc.cluster.local:80
     - hostname: traffic.farren.uk
       service: http://display.traffic.svc.cluster.local:5000
     - hostname: swu-proxy.farren.uk
       service: http://swu-proxy.swu-proxy.svc.cluster.local
+    - hostname: grafana.farren.uk
+      service: http://grafana-service.grafana.svc.cluster.local
     # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
     - service: http_status:404
