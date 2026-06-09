@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
             - name: octopus-fetch-tariff
-              image: ghcr.io/fredoaf/ev-dashboard:v0.0.3
+              image: ghcr.io/fredoaf/ev-dashboard:v0.0.5
               imagePullPolicy: Always
               env:
                 - name: REDIS_HOST
