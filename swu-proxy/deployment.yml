@@ -17,7 +17,7 @@ spec:
         app: swu-proxy
     spec:
       containers:
-      - image: ghcr.io/fredoaf/swu-proxy-print:v0.1.1
+      - image: ghcr.io/fredoaf/swu-proxy-print:tmp-patch
         imagePullPolicy: IfNotPresent
         name: swu-proxy
       restartPolicy: Always

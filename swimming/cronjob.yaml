@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: swimcheck
+  namespace: swimcheck
+spec:
+  schedule: "0/15 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: swimcheck
+              image: ghcr.io/fredoaf/swimcheck:latest
+              imagePullPolicy: IfNotPresent
+            # command:
+          restartPolicy: OnFailure
