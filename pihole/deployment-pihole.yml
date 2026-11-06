@@ -4,6 +4,7 @@ metadata:
   labels:
     app: pihole
   name: pihole
+  namespace: pihole
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -31,7 +32,7 @@ spec:
         #     secretKeyRef:
         #       key: password
         #       name: pihole-webpassword
-        image: pihole/pihole:2026.10.0
+        image: pihole/pihole:2026.10.1
         imagePullPolicy: IfNotPresent
         name: pihole
         ports:

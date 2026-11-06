@@ -31,7 +31,7 @@ spec:
         runAsUser: 472
       containers:
         - name: grafana
-          image: grafana/grafana:main-ubuntu
+          image: grafana/grafana:13.2.5-distroless-slim
           ports:
             - containerPort: 3000
           resources:
