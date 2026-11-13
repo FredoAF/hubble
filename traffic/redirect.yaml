@@ -1,0 +1,32 @@
+# traffic.farren.uk -> public Grafana dashboard.
+# cloudflared can only route to a host:port, not a path, so it forwards the hostname to Traefik
+# (cloudflare/cloudflared.yaml) and this IngressRoute answers every request with a redirect.
+# Check the CRD group with: kubectl api-resources | grep -i traefik
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traffic-to-grafana
+  namespace: traffic
+spec:
+  redirectRegex:
+    regex: "^.*$"
+    replacement: "https://grafana.farren.uk/public-dashboards/908918f07e324616b8b7dfbe5d36aad1?from=now-7d&to=now&timezone=Europe%2FLondon"
+    permanent: false   # 302, so the target can change without browsers caching the old one
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traffic-redirect
+  namespace: traffic
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`traffic.farren.uk`)
+      middlewares:
+        - name: traffic-to-grafana
+      services:
+        # A redirect middleware never forwards the request, but a route still needs a backend.
+        - kind: TraefikService
+          name: noop@internal

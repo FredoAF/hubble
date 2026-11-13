@@ -4,6 +4,7 @@ metadata:
   labels:
     app: pihole
   name: pihole-web
+  namespace: pihole
 spec:
   ports:
   # - name: dns
@@ -26,6 +27,7 @@ metadata:
   labels:
     app: pihole
   name: pihole-tcp
+  namespace: pihole
 spec:
   allocateLoadBalancerNodePorts: true
   externalTrafficPolicy: Cluster
@@ -47,6 +49,7 @@ metadata:
   labels:
     app: pihole
   name: pihole-udp
+  namespace: pihole
 spec:
   allocateLoadBalancerNodePorts: true
   externalTrafficPolicy: Cluster

@@ -5,6 +5,7 @@ metadata:
   labels:
     app: speedtest
   name: speedtest
+  namespace: speedtest
 spec:
   replicas: 1
   selector:
@@ -74,6 +75,7 @@ metadata:
   labels:
     app: mysql
   name: mysql
+  namespace: speedtest
 spec:
   replicas: 1
   selector:

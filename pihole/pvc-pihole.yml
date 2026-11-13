@@ -5,6 +5,7 @@ metadata:
   labels:
     app: pihole
   name: pihole-config
+  namespace: pihole
 spec:
   accessModes:
   - ReadWriteOnce

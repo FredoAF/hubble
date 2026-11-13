@@ -98,8 +98,10 @@ data:
       service: http://pihole-web.pihole.svc.cluster.local:80
     - hostname: jukebox.farren.uk
       service: http://192.168.0.110:80
+    # Traefik redirects this to the public Grafana dashboard (traffic/redirect.yaml);
+    # cloudflared can't target a path itself.
     - hostname: traffic.farren.uk
-      service: http://display.traffic.svc.cluster.local:5000
+      service: http://traefik.kube-system.svc.cluster.local:80
     - hostname: swu-proxy.farren.uk
       service: http://swu-proxy.swu-proxy.svc.cluster.local
     - hostname: grafana.farren.uk

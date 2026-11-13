@@ -9,24 +9,16 @@ spec:
     spec:
       template:
         spec:
-          volumes:
-            - name: storage
-              persistentVolumeClaim:
-                claimName: pvc
           containers:
-            - name: taffic
-              image: ghcr.io/fredoaf/traffic-alerts:0.7.0
+            - name: traffic
+              image: ghcr.io/fredoaf/traffic-alerts:edge
               imagePullPolicy: IfNotPresent
               env:
-                - name: DATA_DIR
-                  value: /app/data/
+                - name: REDIS_HOST
+                  value: redis-service.redis.svc.cluster.local
                 - name: API_KEY
                   valueFrom:
                     secretKeyRef:
                       key: API_KEY
                       name: apikey
-              volumeMounts:
-                - mountPath: /app/data
-                  name: storage
-            # command:
           restartPolicy: OnFailure
